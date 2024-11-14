@@ -1,0 +1,55 @@
+version: "3"
+
+services:
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    ports:
+      - "80:80" # Mapea el puerto 80 del host al puerto 80 del contenedor (HTTP)
+      - "443:443" # Mapea el puerto 443 del host al puerto 443 del contenedor (HTTPS)
+      - "81:81" # Interfaz de administración de Nginx Proxy Manager   # Utilizando SQLite para la base de datos por simplicidad                     # Opcional: desactiva IPv6 si no se usa
+    volumes:
+      - ./nginx-proxy-manager/data:/data
+      - ./nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+    networks:
+      - app_network
+
+  db:
+    build:
+      context: ./db
+    container_name: db_service
+    volumes:
+      - db_data:/data
+    networks:
+      - app_network
+    ports:
+      - "5002:5002"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend_service
+    depends_on:
+      - db
+    networks:
+      - app_network
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend_service
+    depends_on:
+      - backend
+    networks:
+      - app_network
+    ports:
+      - "5001:5001"
+
+volumes:
+  db_data:
+
+networks:
+  app_network:
+    driver: bridge

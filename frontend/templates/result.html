@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resultado de la Conversión</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styleresult.css') }}"
+    />
+  </head>
+  <body>
+    <div class="result-container">
+      <h2>Resultado de la Conversión</h2>
+      <p class="info-text">
+        Aquí tienes los resultados de la conversión de tu moneda. Los valores
+        reflejan la tasa de cambio actual.
+      </p>
+      <table class="conversion-table">
+        <tr>
+          <th>Original Amount</th>
+          <th>Converted Amount</th>
+          <th>Exchange Rate</th>
+          <th>From Currency</th>
+          <th>To Currency</th>
+        </tr>
+        <tr>
+          <td>{{ data.original_amount }}</td>
+          <td>{{ data.converted_amount }}</td>
+          <td>{{ data.exchange_rate }}</td>
+          <td>{{ data.from_currency }}</td>
+          <td>{{ data.to_currency }}</td>
+        </tr>
+      </table>
+      <a href="/rates" class="back-button">Volver</a>
+    </div>
+  </body>
+</html>
