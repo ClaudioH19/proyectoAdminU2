@@ -9,21 +9,31 @@ url_backend_convert="http://backend:5000/convert"
 
 @app.route('/rates', methods=['GET'])
 def receive_data():
+    # funcionalidad de /rates?from=USD&to=EUR
+    # prueba: http://localhost:5001/rates?from=USD&to=ARS&amount=100
+    from_currency = request.args.get("from", default="USD")  # Valor por defecto USD
+    to_currency = request.args.get("to", default="USD")      # Valor por defecto USD
+    amount = request.args.get("amount", default=0.0, type=float)  # Valor por defecto 0.0
     
     try:
-        #traer los datos
+        # Obtener los datos de las tasas de cambio del backend
         response = requests.get(url_backend)
         
         if response.status_code == 200:
             data = response.json()
             conversion_rates = data
-            return render_template("index.html",data=conversion_rates)
-        
+            # Renderizar la plantilla y pasarle los parámetros para preseleccionar los valores
+            return render_template("index.html", data=conversion_rates, 
+                                   from_currency=from_currency, 
+                                   to_currency=to_currency, 
+                                   amount=amount)
         else:
             print(f"Error al hacer la solicitud: {response.status_code}")
+            return f"Error al hacer la solicitud: {response.status_code}", response.status_code
     
     except requests.RequestException as e:
         return jsonify({"error": "Failed to retrieve data"}), 500
+
  
  
  

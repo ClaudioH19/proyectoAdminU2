@@ -19,13 +19,13 @@
       <h2>Conversor de Monedas</h2>
       <form
         id="currency-form"
-        action="http://localhost:5001/convert"
+        action="/convert"
         method="POST"
       >
         <label for="from-currency">From:</label>
         <select id="from-currency" name="from">
           {% for item in data %}
-          <option value="{{ item.currency }}">
+          <option value="{{ item.currency }}" {% if item.currency == from_currency %}selected{% endif %}>
             {{ item.currency }} - {{ item.rate }}
           </option>
           {% endfor %}
@@ -34,7 +34,7 @@
         <label for="to-currency">To:</label>
         <select id="to-currency" name="to">
           {% for item in data %}
-          <option value="{{ item.currency }}">
+          <option value="{{ item.currency }}" {% if item.currency == to_currency %}selected{% endif %}>
             {{ item.currency }} - {{ item.rate }}
           </option>
           {% endfor %}
@@ -46,11 +46,21 @@
           id="amount"
           name="amount"
           placeholder="0.00"
+          value="{{ amount }}"
           required
         />
 
         <button type="submit">Convertir</button>
       </form>
+
+      <!-- Muestra el resultado si existe -->
+      {% if converted_amount is defined %}
+      <div class="result">
+        <h3>Resultado:</h3>
+        <p>{{ amount }} {{ from_currency }} = {{ converted_amount }} {{ to_currency }}</p>
+        <p>Tasa de Cambio: 1 {{ from_currency }} = {{ exchange_rate }} {{ to_currency }}</p>
+      </div>
+      {% endif %}
     </div>
 
     <!-- Choices.js JavaScript -->
