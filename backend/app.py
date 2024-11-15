@@ -1,20 +1,68 @@
 from flask import Flask, request, jsonify, render_template
 import requests
+import redis
+import json
+
 url_convert = "https://v6.exchangerate-api.com/v6/a6b6b66db857e66ab5dd506b/pair"
 
 data_api_url = "http://db:5002/data"
+
+# Inicializa Redis
+try:
+    redis_client = redis.Redis(host='redis', port=6379, db=0)
+    redis_available = True
+except redis.ConnectionError:
+    redis_available = False
 
 app = Flask(__name__)
 
 @app.route("/rates")
 def home():
+    data = None
+
+    # Intenta obtener los datos de Redis si está disponible
+    if redis_available:
+        try:
+            cached_data = redis_client.get("api_response")
+            
+            if cached_data:
+                print("Datos obtenidos de Redis")
+                data = json.loads(cached_data)
+
+                # Verifica si `data` es un diccionario antes de agregar "source"
+                if isinstance(data, dict):
+                    data["source"] = "Redis"
+                elif isinstance(data, list) and len(data) > 0:
+                    data[0]["source"] = "Redis"
+
+                return jsonify(data)
+        except redis.ConnectionError:
+            print("Redis no está disponible. Continuando sin caché.")
+        except Exception as e:
+            print(f"No se pudo recuperar datos de Redis: {e}")
+
+    # Si no existen en Redis o Redis no está disponible, realiza la solicitud a la API
     response = requests.get(data_api_url)
     if response.status_code == 200:
         data = response.json()
-        print(data)
+
+        # Añade la información de la fuente
+        if isinstance(data, dict):
+            data["source"] = "MySqlite"
+        elif isinstance(data, list) and len(data) > 0:
+            data[0]["source"] = "MySqlite"
+
+        # Guarda los datos en Redis si está disponible
+        if redis_available:
+            try:
+                redis_client.setex("api_response", 3600, json.dumps(data))
+                print("Datos obtenidos de la API y guardados en Redis")
+            except redis.ConnectionError:
+                print("No se pudo guardar los datos en Redis. Redis no está disponible.")
+
         return jsonify(data)
     else:
-        return f" Error en la solicitud: {response.status_code}", response.status_code
+        return f"Error en la solicitud: {response.status_code}", response.status_code
 
 
 

@@ -1,89 +1,95 @@
 /* Estilo general de la página */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f6f8fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-  }
-  
-  /* Contenedor principal del conversor */
-  .converter {
-    background-color: #ffffff;
-    padding: 2em;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    max-width: 90%;
-    text-align: center;
-  }
-  
-  .converter h2 {
-    font-size: 1.8em;
-    margin-bottom: 1em;
-    color: #333333;
-  }
-  
-  /* Estilo del formulario */
-  #currency-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5em;
-  }
-  
-  label {
-    font-weight: bold;
-    color: #333333;
-    margin-bottom: 0.2em;
-    text-align: left;
-    display: block;
-  }
-  
-  /* Campos de selección y entrada */
-  select, input[type="number"] {
-    padding: 0.8em;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    font-size: 1em;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-  }
-  
-  select:focus, input[type="number"]:focus {
-    border-color: #0070ba; /* Color azul similar al de PayPal */
-    outline: none;
-  }
-  
-  /* Botón de envío */
-  button[type="submit"] {
-    background-color: #0070ba; /* Azul estilo PayPal */
-    color: white;
-    padding: 0.8em;
-    font-size: 1.1em;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: #005fa3;
-  }
+  font-family: Arial, sans-serif;
+  background-color: #f6f8fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  animation: fadeIn 1s ease-in-out;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
 
-
+/* Contenedor principal del conversor */
 .converter {
-  max-width: 400px;
-  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
   text-align: center;
 }
 
+.converter h2 {
+  font-size: 1.8em;
+  margin-bottom: 1em;
+  color: #333333;
+}
+
+/* Contenedor de fuente de datos */
+.source {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 1em;
+}
+
+/* Estilo del formulario */
+#currency-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+label {
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 0.2em;
+  text-align: left;
+  display: block;
+}
+
+/* Campos de selección y entrada */
+select,
+input[type="number"] {
+  padding: 0.8em;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+select:focus,
+input[type="number"]:focus {
+  border-color: #0070ba;
+  outline: none;
+}
+
+/* Botón de envío */
+button[type="submit"] {
+  background-color: #0070ba;
+  color: white;
+  padding: 0.8em;
+  font-size: 1.1em;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #005fa3;
+}
+
+/* Estilo para Choices.js */
 .choices__inner {
   border-radius: 5px;
-  border-color: #0070ba; /* Color azul similar a PayPal */
+  border-color: #0070ba;
 }
 
 .choices__list--dropdown .choices__item--selectable {
@@ -96,21 +102,12 @@ body {
   color: #0070ba;
 }
 
-
-
 /* Definición de la animación */
 @keyframes fadeIn {
   0% {
-    opacity: 0;
+      opacity: 0;
   }
   100% {
-    opacity: 1;
+      opacity: 1;
   }
-}
-
-/* Aplicación de la animación al body */
-body {
-  animation: fadeIn 1s ease-in-out;
-  opacity: 0; /* Comienza transparente */
-  animation-fill-mode: forwards; /* Mantiene el estado final de la opacidad */
 }
