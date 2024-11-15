@@ -34,7 +34,9 @@ def receive_data():
     except requests.RequestException as e:
         return jsonify({"error": "Failed to retrieve data"}), 500
 
- 
+@app.route('/', methods=['GET'])
+def root():
+    return receive_data()
  
  
 @app.route('/convert', methods=['POST'])
