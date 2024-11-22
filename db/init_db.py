@@ -1,9 +1,20 @@
 # init_db.py
 import requests
 import sqlite3
+import os
 
 url = "https://v6.exchangerate-api.com/v6/a6b6b66db857e66ab5dd506b/latest/USD"
 DATABASE = 'database.db'
+
+def delete_database():
+    """Elimina el archivo de la base de datos si existe."""
+    if os.path.exists(DATABASE):
+        os.remove(DATABASE)
+        print(f"La base de datos '{DATABASE}' ha sido eliminada.")
+    else:
+        print(f"La base de datos '{DATABASE}' no existe o ya fue eliminada.")
+
+
 
 def initialize_database():
     conn = sqlite3.connect(DATABASE)
