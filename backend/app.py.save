@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import requests
 import redis
 import json
-import os  
+import socket 
 
 
 url_convert = "https://v6.exchangerate-api.com/v6/a6b6b66db857e66ab5dd506b/pair"
@@ -89,8 +89,8 @@ def convert():
             "converted_amount": round(converted_amount, 2),
             "exchange_rate": exchange_rate,
             "from_currency": from_currency,
-            "to_currency": to_currency,
-	    "id_backend": container_id
+            "to_currency": to_currency
+	    "backend_id": container_id
         })
         
     else:

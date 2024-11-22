@@ -3,14 +3,13 @@ version: "3"
 services:
   nginx-proxy-manager:
     image: jc21/nginx-proxy-manager:latest
-    container_name: nginx-proxy-manager
     ports:
-      - "80:80" # Mapea el puerto 80 del host al puerto 80 del contenedor (HTTP)
-      - "443:443" # Mapea el puerto 443 del host al puerto 443 del contenedor (HTTPS)
-      - "81:81" # Interfaz de administración de Nginx Proxy Manager   # Utilizando SQLite para la base de datos por simplicidad                     # Opcional: desactiva IPv6 si no se usa
+      - "80:80"
+      - "443:443"
+      - "81:81"
     volumes:
-      - ./nginx-proxy-manager/data:/data
-      - ./nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+      - data_volume:/data
+      - letsencrypt_volume:/etc/letsencrypt
     networks:
       - app_network
     deploy:
@@ -19,9 +18,7 @@ services:
         condition: on-failure
 
   db:
-    build:
-      context: ./db
-    container_name: db_service
+    image: db_service_image
     volumes:
       - db_data:/data
     networks:
@@ -34,9 +31,7 @@ services:
         condition: on-failure
 
   backend:
-    build:
-      context: ./backend
-    container_name: backend_service
+    image: backend_service_image
     depends_on:
       - db
     networks:
@@ -49,9 +44,7 @@ services:
         condition: on-failure
 
   frontend:
-    build:
-      context: ./frontend
-    container_name: frontend_service
+    image: frontend_service_image
     depends_on:
       - backend
     networks:
@@ -65,7 +58,6 @@ services:
 
   redis:
     image: redis:latest
-    container_name: redis_service
     ports:
       - "6379:6379"
     volumes:
@@ -80,7 +72,9 @@ services:
 volumes:
   db_data:
   redis_data:
+  data_volume:
+  letsencrypt_volume:
 
 networks:
   app_network:
-    driver: bridge
+    external: true

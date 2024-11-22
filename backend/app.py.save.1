@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import requests
 import redis
 import json
-import os  
+import socket 
 
 
 url_convert = "https://v6.exchangerate-api.com/v6/a6b6b66db857e66ab5dd506b/pair"
@@ -17,6 +17,8 @@ except redis.ConnectionError:
     redis_available = False
 
 app = Flask(__name__)
+#nombre de la vaina
+container_name = socker.gethostname
 
 @app.route("/rates")
 def home():
@@ -83,14 +85,13 @@ def convert():
         converted_amount = float(amount) * exchange_rate
         
         print(f"datos:{exchange_rate}")
-        container_id = os.getenv("HOSTNAME", "Unknown container")
+        
         return jsonify({
             "original_amount": amount,
             "converted_amount": round(converted_amount, 2),
             "exchange_rate": exchange_rate,
             "from_currency": from_currency,
-            "to_currency": to_currency,
-	    "id_backend": container_id
+            "to_currency": to_currency
         })
         
     else:

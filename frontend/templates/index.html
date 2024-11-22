@@ -7,11 +7,109 @@
     <title>Conversor de Monedas</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #2a9d8f;
+        }
+
+        .converter {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select, input, button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button {
+            background: #2a9d8f;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #21867a;
+        }
+
+        .result {
+            margin-top: 20px;
+            background: #e9f7f5;
+            padding: 15px;
+            border-radius: 5px;
+            color: #1e6156;
+            font-size: 16px;
+        }
+
+        .result h3 {
+            margin: 0;
+            margin-bottom: 10px;
+            font-size: 20px;
+            color: #2a9d8f;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .converter {
+                padding: 15px;
+                width: 100%;
+            }
+
+            h1, h2 {
+                font-size: 20px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <h1>Conversor de Monedas</h1>
+    <p>Accediendo al contenedor: {{ container_id }}</p>
+
     <div class="converter">
-        <h2>Conversor de Monedas</h2>
-        
+        <h2>Conversor</h2>
         {% if data is mapping %}
             <p>Fuente de datos: {{ data.source }}</p>
         {% elif data[0] is mapping %}
@@ -19,7 +117,7 @@
         {% endif %}
 
         <form id="currency-form" action="/convert" method="POST">
-            <label for="from-currency">From:</label>
+            <label for="from-currency">De:</label>
             <select id="from-currency" name="from">
                 {% for item in data %}
                 <option value="{{ item.currency }}" {% if item.currency == from_currency %}selected{% endif %}>
@@ -28,7 +126,7 @@
                 {% endfor %}
             </select>
 
-            <label for="to-currency">To:</label>
+            <label for="to-currency">A:</label>
             <select id="to-currency" name="to">
                 {% for item in data %}
                 <option value="{{ item.currency }}" {% if item.currency == to_currency %}selected{% endif %}>
@@ -43,7 +141,6 @@
             <button type="submit">Convertir</button>
         </form>
 
-        <!-- Muestra el resultado si existe -->
         {% if converted_amount is defined %}
         <div class="result">
             <h3>Resultado:</h3>

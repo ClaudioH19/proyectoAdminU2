@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify,render_template
 import requests, sqlite3
+import os
 app = Flask(__name__)
 
 url_backend="http://backend:5000/rates"
@@ -22,11 +23,13 @@ def receive_data():
         if response.status_code == 200:
             data = response.json()
             conversion_rates = data
+            container_id = os.getenv("HOSTNAME", "Unknown container")
             # Renderizar la plantilla y pasarle los parámetros para preseleccionar los valores
             return render_template("index.html", data=conversion_rates, 
                                    from_currency=from_currency, 
                                    to_currency=to_currency, 
-                                   amount=amount)
+                                   amount=amount, 
+			           container_id=container_id)
         else:
             print(f"Error al hacer la solicitud: {response.status_code}")
             return f"Error al hacer la solicitud: {response.status_code}", response.status_code

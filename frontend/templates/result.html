@@ -5,12 +5,102 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Resultado de la Conversión</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styleresult.css') }}"
-    />
+    <style>
+      /* Estilo general */
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      h1, h2 {
+        text-align: center;
+        color: #2a9d8f;
+      }
+
+      p.info-text {
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #555;
+      }
+
+      .result-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 90%;
+        max-width: 800px;
+        text-align: center;
+      }
+
+      .conversion-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      .conversion-table th, .conversion-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .conversion-table th {
+        background-color: #2a9d8f;
+        color: white;
+        font-weight: bold;
+      }
+
+      .conversion-table td {
+        background-color: #f9f9f9;
+      }
+
+      .back-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #2a9d8f;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: background 0.3s;
+      }
+
+      .back-button:hover {
+        background: #21867a;
+      }
+
+      /* Responsividad */
+      @media (max-width: 768px) {
+        h1, h2 {
+          font-size: 20px;
+        }
+
+        .conversion-table th, .conversion-table td {
+          font-size: 14px;
+          padding: 8px;
+        }
+
+        .back-button {
+          font-size: 14px;
+        }
+      }
+    </style>
   </head>
   <body>
+    <h1>Resultado de la Conversión</h1>
+    <p>Accediendo al contenedor: {{ data.id_backend }}</p> <!-- Muestra el ID del contenedor -->
+
     <div class="result-container">
       <h2>Resultado de la Conversión</h2>
       <p class="info-text">
