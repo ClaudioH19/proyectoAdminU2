@@ -18,6 +18,29 @@ except redis.ConnectionError:
 
 app = Flask(__name__)
 
+
+@app.route("/tax")
+def obtaintax():
+    from_currency = request.args.get('from')
+    to_currency = request.args.get('to')
+
+    if not from_currency or not to_currency:
+        return "<h1>Parámetros 'from' y 'to' son requeridos.</h1>", 400
+
+    fetch_url = url_convert + "/" + from_currency + "/" + to_currency
+    response = requests.get(fetch_url)
+    
+    if response.status_code == 200:
+        tax = response.json()
+        exchange_rate = float(tax.get("conversion_rate"))
+        
+        container_id = os.getenv("HOSTNAME", "Unknown container")
+        return f"<h1>Tasa de cambio {from_currency}-{to_currency} está en: {exchange_rate}</h1>"
+        
+    else:
+        return f"<h1>Error en la solicitud: {response.status_code}</h1>", response.status_code
+
+
 @app.route("/rates")
 def home():
     data = None

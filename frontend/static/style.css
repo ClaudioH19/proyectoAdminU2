@@ -1,113 +1,125 @@
 /* Estilo general de la página */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f6f8fa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  background-color: #edf3f9; /* Azul claro suave */
   margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: #333;
   animation: fadeIn 1s ease-in-out;
   opacity: 0;
   animation-fill-mode: forwards;
 }
 
-/* Contenedor principal del conversor */
+h1,
+h2 {
+  text-align: center;
+  color: #0070ba; /* Azul PayPal */
+}
+
 .converter {
-  background-color: #ffffff;
-  padding: 2em;
+  background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 400px;
-  max-width: 90%;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  margin-top: 20px;
   text-align: center;
 }
 
-.converter h2 {
-  font-size: 1.8em;
-  margin-bottom: 1em;
-  color: #333333;
-}
-
-/* Contenedor de fuente de datos */
-.source {
-  font-size: 0.9em;
-  color: #666;
-  margin-bottom: 1em;
-}
-
-/* Estilo del formulario */
-#currency-form {
+form {
   display: flex;
   flex-direction: column;
-  gap: 1.5em;
+  gap: 15px;
 }
 
 label {
   font-weight: bold;
-  color: #333333;
-  margin-bottom: 0.2em;
-  text-align: left;
-  display: block;
+  color: #00457c; /* Azul más oscuro */
 }
 
-/* Campos de selección y entrada */
 select,
-input[type="number"] {
-  padding: 0.8em;
-  border: 1px solid #cccccc;
+input,
+button {
+  padding: 10px;
+  border: 1px solid #b0cfe5; /* Azul claro */
   border-radius: 5px;
-  font-size: 1em;
+  font-size: 16px;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 select:focus,
-input[type="number"]:focus {
+input:focus {
   border-color: #0070ba;
+  box-shadow: 0 0 5px rgba(0, 112, 186, 0.5); /* Resplandor azul claro */
   outline: none;
 }
 
-/* Botón de envío */
-button[type="submit"] {
-  background-color: #0070ba;
+button {
+  background: #0070ba; /* Azul PayPal */
   color: white;
-  padding: 0.8em;
-  font-size: 1.1em;
-  font-weight: bold;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-weight: bold;
+  transition: background 0.3s, transform 0.2s;
 }
 
-button[type="submit"]:hover {
-  background-color: #005fa3;
+button:hover {
+  background: #005fa3; /* Azul más oscuro */
+  transform: scale(1.02); /* Pequeña animación al pasar el ratón */
 }
 
-/* Estilo para Choices.js */
-.choices__inner {
+.result {
+  margin-top: 20px;
+  background: #d9edf7; /* Azul muy claro */
+  padding: 15px;
   border-radius: 5px;
-  border-color: #0070ba;
+  color: #00457c; /* Azul más oscuro */
+  font-size: 16px;
 }
 
-.choices__list--dropdown .choices__item--selectable {
-  padding: 8px;
-  color: #333;
+.result h3 {
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #0070ba; /* Azul PayPal */
 }
 
-.choices__list--dropdown .choices__item--selectable:hover {
-  background-color: #f0f0f0;
-  color: #0070ba;
+p {
+  margin: 0;
 }
 
 /* Definición de la animación */
 @keyframes fadeIn {
   0% {
-      opacity: 0;
+    opacity: 0;
   }
+
   100% {
-      opacity: 1;
+    opacity: 1;
+  }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .converter {
+    padding: 15px;
+    width: 100%;
+  }
+
+  h1,
+  h2 {
+    font-size: 20px;
+  }
+
+  button {
+    font-size: 14px;
   }
 }

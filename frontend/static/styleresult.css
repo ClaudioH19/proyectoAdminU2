@@ -1,41 +1,50 @@
 /* Estilo general */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f6f8fa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  background-color: #edf3f9; /* Azul claro suave */
+  color: #333;
   margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  animation: fadeIn 1s ease-in-out;
+  opacity: 0;
+  animation-fill-mode: forwards;
 }
 
-/* Contenedor principal */
+h1,
+h2 {
+  text-align: center;
+  color: #0070ba; /* Azul PayPal */
+}
+
+p.info-text {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #666666; /* Gris suave */
+}
+
 .result-container {
   background-color: #ffffff;
-  padding: 2em;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 60%;
+  padding: 2em;
+  width: 90%;
   max-width: 800px;
   text-align: center;
   margin-top: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Título */
-.result-container h2 {
-  font-size: 2em;
-  margin-bottom: 0.5em;
-  color: #333333;
+.result-container:hover {
+  transform: translateY(-5px); /* Efecto de elevación */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Sombra más fuerte */
 }
 
-/* Texto de información */
-.info-text {
-  font-size: 1em;
-  color: #666666;
-  margin-bottom: 1em;
-}
-
-/* Tabla de conversión */
 .conversion-table {
   width: 100%;
   border-collapse: collapse;
@@ -45,17 +54,15 @@ body {
 
 .conversion-table th,
 .conversion-table td {
+  border: 1px solid #b0cfe5; /* Azul claro */
   padding: 1em;
-  border: 1px solid #cccccc;
   text-align: center;
 }
 
 .conversion-table th {
-  background-color: #0070ba; /* Azul estilo PayPal */
+  background-color: #0070ba; /* Azul PayPal */
   color: white;
   font-weight: bold;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
 }
 
 .conversion-table td {
@@ -63,48 +70,55 @@ body {
   color: #333333;
 }
 
-.conversion-table tr:first-child th:first-child {
-  border-top-left-radius: 10px;
+.conversion-table tr:nth-child(even) td {
+  background-color: #edf3f9; /* Azul claro alternativo */
 }
 
-.conversion-table tr:first-child th:last-child {
-  border-top-right-radius: 10px;
-}
-
-/* Botón de Volver */
 .back-button {
   display: inline-block;
   margin-top: 20px;
   padding: 0.8em 2em;
+  background-color: #0070ba; /* Azul PayPal */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
   font-size: 1.1em;
   font-weight: bold;
-  color: #ffffff;
-  background-color: #0070ba; /* Azul estilo PayPal */
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .back-button:hover {
-  background-color: #005fa3; /* Color más oscuro al hacer hover */
+  background-color: #005fa3; /* Azul más oscuro */
+  transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
 }
-
 
 /* Definición de la animación */
 @keyframes fadeIn {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
 }
 
-/* Aplicación de la animación al body */
-body {
-  animation: fadeIn 1s ease-in-out;
-  opacity: 0; /* Comienza transparente */
-  animation-fill-mode: forwards; /* Mantiene el estado final de la opacidad */
+/* Responsividad */
+@media (max-width: 768px) {
+  h1,
+  h2 {
+    font-size: 20px;
+  }
+
+  .conversion-table th,
+  .conversion-table td {
+    font-size: 14px;
+    padding: 0.8em;
+  }
+
+  .back-button {
+    font-size: 14px;
+    padding: 0.6em 1.5em;
+  }
 }

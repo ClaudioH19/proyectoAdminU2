@@ -18,7 +18,7 @@ services:
         condition: on-failure
 
   db:
-    image: db_service_image
+    image: claudio19/db_service_image
     volumes:
       - db_data:/data
     networks:
@@ -31,7 +31,7 @@ services:
         condition: on-failure
 
   backend:
-    image: backend_service_image
+    image: claudio19/backend_service_image
     depends_on:
       - db
     networks:
@@ -44,7 +44,7 @@ services:
         condition: on-failure
 
   frontend:
-    image: frontend_service_image
+    image: claudio19/frontend_service_image
     depends_on:
       - backend
     networks:
