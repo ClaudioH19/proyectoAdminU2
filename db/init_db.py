@@ -1,4 +1,3 @@
-# init_db.py
 import requests
 import sqlite3
 import os
@@ -13,8 +12,6 @@ def delete_database():
         print(f"La base de datos '{DATABASE}' ha sido eliminada.")
     else:
         print(f"La base de datos '{DATABASE}' no existe o ya fue eliminada.")
-
-
 
 def initialize_database():
     conn = sqlite3.connect(DATABASE)
@@ -31,13 +28,15 @@ def initialize_database():
     conn.commit()
     conn.close()
 
-
 def fetch_conversion_rates():
+    """Obtiene los tipos de cambio desde la API."""
     response = requests.get(url)
+    response.raise_for_status()  # Lanza una excepción si hay un error en la solicitud
     data = response.json()
-    return data['conversion_rates']  # Esto devuelve el diccionario de tipos de cambio
+    return data['conversion_rates']  # Devuelve el diccionario de tipos de cambio
 
 def store_conversion_rates(rates):
+    """Almacena los tipos de cambio en la base de datos."""
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     
@@ -50,8 +49,12 @@ def store_conversion_rates(rates):
     conn.commit()
     conn.close()
 
-
 if __name__ == '__main__':
-    initialize_database()
-    rates = fetch_conversion_rates()
-    store_conversion_rates(rates)
+    delete_database()  # Elimina la base de datos si existe
+    initialize_database()  # Crea una nueva base de datos
+    try:
+        rates = fetch_conversion_rates()  # Obtiene los datos de la API
+        store_conversion_rates(rates)  # Almacena los datos en la base de datos
+        print("Base de datos actualizada con los tipos de cambio.")
+    except Exception as e:
+        print(f"Error al actualizar los tipos de cambio: {e}")
