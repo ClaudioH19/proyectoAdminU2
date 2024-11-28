@@ -45,26 +45,45 @@ def obtaintax():
 def home():
     data = None
 
-    # Intenta obtener los datos de Redis dinámicamente
     try:
+        # Intenta conectarte a Redis
         cached_data = redis_client.get("api_response")
         
         if cached_data:
             print("Datos obtenidos de Redis")
             data = json.loads(cached_data)
 
-            # Verifica si `data` es un diccionario antes de agregar "source"
+            # Añade información de la fuente para Redis
             if isinstance(data, dict):
                 data["source"] = "Redis"
             elif isinstance(data, list) and len(data) > 0:
                 data[0]["source"] = "Redis"
 
             return jsonify(data)
+        else:
+            print("Redis está disponible pero no tiene datos. Repoblando desde la API.")
+            # Repoblar Redis desde la API si está vacío
+            response = requests.get(data_api_url)
+            if response.status_code == 200:
+                data = response.json()
+
+                # Añade la información de la fuente
+                if isinstance(data, dict):
+                    data["source"] = "MySqlite"
+                elif isinstance(data, list) and len(data) > 0:
+                    data[0]["source"] = "MySqlite"
+
+                # Guarda los datos en Redis
+                redis_client.setex("api_response", 3600, json.dumps(data))
+                print("Datos repoblados en Redis")
+                return jsonify(data)
+            else:
+                return f"Error en la solicitud: {response.status_code}", response.status_code
 
     except redis.ConnectionError:
         print("Redis no está disponible. Continuando sin caché.")
     except Exception as e:
-        print(f"No se pudo recuperar datos de Redis: {e}")
+        print(f"Error al manejar Redis: {e}")
 
     # Si no existen en Redis o Redis no está disponible, realiza la solicitud a la API
     response = requests.get(data_api_url)
@@ -77,16 +96,10 @@ def home():
         elif isinstance(data, list) and len(data) > 0:
             data[0]["source"] = "MySqlite"
 
-        # Guarda los datos en Redis si está disponible
-        try:
-            redis_client.setex("api_response", 3600, json.dumps(data))
-            print("Datos obtenidos de la API y guardados en Redis")
-        except redis.ConnectionError:
-            print("No se pudo guardar los datos en Redis. Redis no está disponible.")
-
         return jsonify(data)
     else:
         return f"Error en la solicitud: {response.status_code}", response.status_code
+
 
 @app.route('/convert', methods=['POST'])
 def convert():
