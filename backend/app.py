@@ -41,6 +41,8 @@ def obtaintax():
         return f"<h1>Error en la solicitud: {response.status_code}</h1>", response.status_code
 
 
+import time
+
 @app.route("/rates")
 def home():
     data = None
@@ -48,37 +50,48 @@ def home():
     try:
         # Intenta conectarte a Redis
         cached_data = redis_client.get("api_response")
-        
-        if cached_data:
-            print("Datos obtenidos de Redis")
-            data = json.loads(cached_data)
+        cached_timestamp = redis_client.get("api_response_timestamp")
 
-            # Añade información de la fuente para Redis
-            if isinstance(data, dict):
-                data["source"] = "Redis"
-            elif isinstance(data, list) and len(data) > 0:
-                data[0]["source"] = "Redis"
+        if cached_data and cached_timestamp:
+            # Verifica si los datos en Redis son recientes
+            current_time = int(time.time())
+            data_age = current_time - int(cached_timestamp)
 
-            return jsonify(data)
-        else:
-            print("Redis está disponible pero no tiene datos. Repoblando desde la API.")
-            # Repoblar Redis desde la API si está vacío
-            response = requests.get(data_api_url)
-            if response.status_code == 200:
-                data = response.json()
+            if data_age < 3600:  # Considera los datos válidos si tienen menos de 1 hora
+                print("Datos obtenidos de Redis (válidos)")
+                data = json.loads(cached_data)
 
-                # Añade la información de la fuente
+                # Añade información de la fuente
                 if isinstance(data, dict):
-                    data["source"] = "MySqlite"
+                    data["source"] = "Redis"
                 elif isinstance(data, list) and len(data) > 0:
-                    data[0]["source"] = "MySqlite"
+                    data[0]["source"] = "Redis"
 
-                # Guarda los datos en Redis
-                redis_client.setex("api_response", 3600, json.dumps(data))
-                print("Datos repoblados en Redis")
                 return jsonify(data)
             else:
-                return f"Error en la solicitud: {response.status_code}", response.status_code
+                print("Datos en Redis están desactualizados. Repoblando desde la API.")
+
+        else:
+            print("Redis está disponible pero no tiene datos o están incompletos. Repoblando desde la API.")
+
+        # Repoblar Redis desde la API si está vacío o los datos están desactualizados
+        response = requests.get(data_api_url)
+        if response.status_code == 200:
+            data = response.json()
+
+            # Añade la información de la fuente
+            if isinstance(data, dict):
+                data["source"] = "MySqlite"
+            elif isinstance(data, list) and len(data) > 0:
+                data[0]["source"] = "MySqlite"
+
+            # Guarda los datos y la marca de tiempo en Redis
+            redis_client.set("api_response", json.dumps(data))
+            redis_client.set("api_response_timestamp", int(time.time()))
+            print("Datos repoblados en Redis")
+            return jsonify(data)
+        else:
+            return f"Error en la solicitud: {response.status_code}", response.status_code
 
     except redis.ConnectionError:
         print("Redis no está disponible. Continuando sin caché.")

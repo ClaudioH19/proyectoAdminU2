@@ -60,8 +60,8 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
-    volumes:
-      - redis_data:/data
+    volumes: [] # No monta volúmenes para persistencia
+    command: ["redis-server", "--save", "", "--appendonly", "no"] # Desactiva persistencia
     networks:
       - app_network
     deploy:
