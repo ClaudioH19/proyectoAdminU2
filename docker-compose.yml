@@ -60,7 +60,6 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
-    volumes: [] # No monta volúmenes para persistencia
     command: ["redis-server", "--save", "", "--appendonly", "no"] # Desactiva persistencia
     networks:
       - app_network
@@ -71,7 +70,6 @@ services:
 
 volumes:
   db_data:
-  redis_data:
   data_volume:
   letsencrypt_volume:
 

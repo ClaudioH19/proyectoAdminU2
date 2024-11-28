@@ -3,6 +3,7 @@ import requests
 import redis
 import json
 import os  
+import time
 
 
 url_convert = "https://v6.exchangerate-api.com/v6/a6b6b66db857e66ab5dd506b/pair"
@@ -72,18 +73,12 @@ def home():
                 print("Datos en Redis están desactualizados. Repoblando desde la API.")
 
         else:
-            print("Redis está disponible pero no tiene datos o están incompletos. Repoblando desde la API.")
+            print("Redis está vacío o incompleto. Repoblando datos desde la API.")
 
         # Repoblar Redis desde la API si está vacío o los datos están desactualizados
         response = requests.get(data_api_url)
         if response.status_code == 200:
             data = response.json()
-
-            # Añade la información de la fuente
-            if isinstance(data, dict):
-                data["source"] = "MySqlite"
-            elif isinstance(data, list) and len(data) > 0:
-                data[0]["source"] = "MySqlite"
 
             # Guarda los datos y la marca de tiempo en Redis
             redis_client.set("api_response", json.dumps(data))
@@ -98,21 +93,13 @@ def home():
     except Exception as e:
         print(f"Error al manejar Redis: {e}")
 
-    # Si no existen en Redis o Redis no está disponible, realiza la solicitud a la API
+    # Fallback a la API si Redis no está disponible
     response = requests.get(data_api_url)
     if response.status_code == 200:
         data = response.json()
-
-        # Añade la información de la fuente
-        if isinstance(data, dict):
-            data["source"] = "MySqlite"
-        elif isinstance(data, list) and len(data) > 0:
-            data[0]["source"] = "MySqlite"
-
         return jsonify(data)
     else:
         return f"Error en la solicitud: {response.status_code}", response.status_code
-
 
 @app.route('/convert', methods=['POST'])
 def convert():
