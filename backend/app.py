@@ -93,7 +93,7 @@ def home():
         except (redis.ConnectionError, redis.TimeoutError):
             print("No se pudo almacenar en Redis. Redis sigue no disponible.")
 
-        # Añade información de la fuente
+        # Añade información de la fuente para los datos de la API
         if isinstance(data, dict):
             data["source"] = "MySqlite"
         elif isinstance(data, list) and len(data) > 0:
