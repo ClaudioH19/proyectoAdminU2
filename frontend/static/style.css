@@ -9,7 +9,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  color: #333;
+  color: red;
   animation: fadeIn 1s ease-in-out;
   opacity: 0;
   animation-fill-mode: forwards;
