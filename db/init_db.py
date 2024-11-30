@@ -5,6 +5,10 @@ import os
 url = "https://v6.exchangerate-api.com/v6/a6b6b66db857e66ab5dd506b/latest/USD"
 DATABASE = '/data/database.db'
 
+# Crear el directorio si no existe
+if not os.path.exists('/data'):
+    os.makedirs('/data')
+
 def delete_database():
     """Elimina el archivo de la base de datos si existe."""
     if os.path.exists(DATABASE):
